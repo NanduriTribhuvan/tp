@@ -1,0 +1,65 @@
+const readline = require('readline');
+
+function askRank() {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rl.question(`Please enter your rank: `, rank => {
+        switch(rank) {
+            case "Private":
+            case "Sergeant":
+                console.log("You are not authorized.");
+                rl.close();
+                break;
+            case "Commander":
+            case "Captain":
+                greetAndProceed(rank, rl);
+                break;
+            default:
+                console.log("I don't know what your rank is.");
+                rl.close();
+                break;
+        }
+    });
+}
+
+function greetAndProceed(rank, rl) {
+    const greetings = {
+        "Commander": "Hello commander! What can I do for you today?",
+        "Captain": "Hello captain! I will do anything you wish."
+    };
+
+    console.log(greetings[rank]);
+    giveMission(rl, rank);
+}
+
+function giveMission(rl, rank) {
+    rl.question(`Do you require a mission briefing? (yes/no) `, answer => {
+        if (answer.toLowerCase() === "yes") {
+            const mission = {
+                "Commander": "lead the next reconnaissance mission.",
+                "Captain": "oversee the defense strategies for our upcoming operation."
+            };
+            console.log(`${rank}, your mission is to ${mission[rank]}`);
+            equipmentCheck(rl);
+        } else {
+            console.log("Understood. Standing by for further instructions.");
+            rl.close();
+        }
+    });
+}
+
+function equipmentCheck(rl) {
+    rl.question(`Do you want to check your equipment before departure? (yes/no) `, answer => {
+        if (answer.toLowerCase() === "yes") {
+            console.log("Equipment Check:\n- Tactical Map\n- Communication Gear\n- Personal Sidearm\nEverything looks ready!");
+        } else {
+            console.log("No equipment check needed. You are always ready!");
+        }
+        rl.close();
+    });
+}
+
+askRank();
